@@ -1,0 +1,6 @@
+.ipynb_checkpoints/*
+.vscode/*
+.DS_Store
+data/.ipynb_checkpoints/*
+models/.ipynb_checkpoints/*
+

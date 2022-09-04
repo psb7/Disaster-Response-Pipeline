@@ -12,3 +12,23 @@
     `python run.py`
 
 3. Go to http://0.0.0.0:3001/
+
+```
+.
+├── app
+|   └── temlates
+|   |       └── go.html
+|   |       └── master.html 
+|   └── run.py
+├── data
+│   └── disaster_categories.csv
+|   └── disaster_messages.csv
+|   └── DisasterResponse.db
+|   └── process_data.py
+├── models
+│   └── best_adab.pkl
+|   └── train_classifier.py
+|── ETL Pipeline Preparation.py
+|── ml_pipeline.py
+└── README.md
+```

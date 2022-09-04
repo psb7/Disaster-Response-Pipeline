@@ -8,8 +8,9 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
 from sqlalchemy import create_engine
+import joblib
 
 
 app = Flask(__name__)
@@ -26,11 +27,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('data', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/best_adab.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -44,13 +45,16 @@ def index():
     genre_names = list(genre_counts.index)
     
     # create visuals
+    Y = df.drop(['id', 'message', 'original', 'genre'], axis = 1)
+    top_ten = Y.sum(axis=0).sort_values(ascending=False)[:10]
+    top_ten_index = list(top_ten.index)
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
                 Bar(
                     x=genre_names,
-                    y=genre_counts
+                    y=list(genre_counts)
                 )
             ],
 
@@ -63,8 +67,28 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+
+         {
+            'data': [
+                Bar(
+                    x=top_ten_index,
+                    y=list(top_ten)
+                )
+            ],
+
+            'layout': {
+                'title': 'Top 10 categories based on number',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
         }
     ]
+
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
