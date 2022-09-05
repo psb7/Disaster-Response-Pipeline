@@ -1,3 +1,4 @@
+import re
 import sys
 import pandas as pd
 from sqlalchemy import create_engine
@@ -43,6 +44,7 @@ def clean_data(df):
     df = pd.concat([df, categories],axis =1 )
     
     df = df.drop_duplicates() # dropping out the duplicate entries
+    df = df[df['related'] != 2] # removing label'2' of multiclass
     return df
     
 
@@ -57,7 +59,7 @@ def save_data(df, database_filename):
     """
     
     engine = create_engine('sqlite:///'+ database_filename)
-    df.to_sql('data', engine, index=False)  
+    df.to_sql('data', engine, index=False, if_exists = 'replace')  
 
 
 def main():
